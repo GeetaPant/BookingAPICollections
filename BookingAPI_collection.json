@@ -1,0 +1,332 @@
+{
+	"info": {
+		"_postman_id": "dd59a2fe-2fc6-40ed-9090-eae8cc262d9b",
+		"name": "BookingAPI_Workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21343247"
+	},
+	"item": [
+		{
+			"name": "AuthAPI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\" : \"{{username}}\",\n    \"password\" : \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Booking_BaseURL}}/auth",
+					"host": [
+						"{{Booking_BaseURL}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllBooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Booking_BaseURL}}/booking/",
+					"host": [
+						"{{Booking_BaseURL}}"
+					],
+					"path": [
+						"booking",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateABooking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const booking_ID = response.bookingid;\r",
+							"console.log(\"Booking ID is : \"+ booking_ID);\r",
+							"\r",
+							"pm.variables.set(\"Book_ID\",booking_ID)\r",
+							"    \r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\" : \"{{$randomFirstName}}\",\n    \"lastname\" : \"{{$randomLastName}}\",\n    \"totalprice\" : 5210,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Booking_BaseURL}}/booking",
+					"host": [
+						"{{Booking_BaseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateABooking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//Pre requisite - To call the Auth API request to fetch the token\r",
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get(\"Booking_BaseURL\")+'/auth',\r",
+							"    method: 'POST',\r",
+							"    header:{\r",
+							"        \"Content-Type\" : 'application/json'\r",
+							"    },\r",
+							"    body:{\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"                \"username\" : pm.environment.get(\"username\"),\r",
+							"                \"password\" : pm.environment.get(\"password\")\r",
+							"        })\r",
+							"    }\r",
+							"}, function(error, response){//response -- JSON response\r",
+							"    if(error){\r",
+							"        console.log(error);\r",
+							"    }\r",
+							"    else{\r",
+							"        //JSON to JS Object: using parse\r",
+							"      const responseBody =  JSON.parse(response.text());//response to string/text\r",
+							"      const tokenId = responseBody.token;\r",
+							"      console.log(\"token id ==>\" + tokenId);\r",
+							"      pm.variables.set(\"booking_token_id\", tokenId);\r",
+							"    }\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{booking_token_id}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstname\" : \"Vedu\",\n    \"lastname\" : \"Brown\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Booking_BaseURL}}/booking/{{Book_ID}}",
+					"host": [
+						"{{Booking_BaseURL}}"
+					],
+					"path": [
+						"booking",
+						"{{Book_ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteABooking",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest({\r",
+							"    url: pm.environment.get(\"Booking_BaseURL\")+'/auth',\r",
+							"    method: 'POST',\r",
+							"    header:{\r",
+							"        \"Content-Type\" : 'application/json'\r",
+							"    },\r",
+							"    body:{\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"                 \"username\" : pm.environment.get(\"username\"),\r",
+							"                 \"password\" : pm.environment.get(\"password\")\r",
+							"        })\r",
+							"    }\r",
+							"}, function(error, response){//response -- JSON response\r",
+							"    if(error){\r",
+							"        console.log(error);\r",
+							"    }\r",
+							"    else{\r",
+							"        //JSON to JS Object: using parse\r",
+							"      const responseBody =  JSON.parse(response.text());//response to string/text\r",
+							"      const tokenId = responseBody.token;\r",
+							"      console.log(\"token id ==>\" + tokenId);\r",
+							"      pm.variables.set(\"booking_token_id\", tokenId);\r",
+							"    }\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{booking_token_id}}"
+					}
+				],
+				"url": {
+					"raw": "{{Booking_BaseURL}}/booking/{{Book_ID}}",
+					"host": [
+						"{{Booking_BaseURL}}"
+					],
+					"path": [
+						"booking",
+						"{{Book_ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"    pm.test(\"Response time is less than 5000ms\", function () {\r",
+					"        pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+					"\r",
+					"    });"
+				]
+			}
+		}
+	]
+}

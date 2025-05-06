@@ -1,0 +1,521 @@
+{
+	"info": {
+		"_postman_id": "bfb8bede-b620-40bf-ac98-f1dba36ca634",
+		"name": "March2025_ThinkingTester_Contacts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21343247"
+	},
+	"item": [
+		{
+			"name": "ThinkingTeseterAPI",
+			"item": [
+				{
+					"name": "1-Create a contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"const userid= response._id;\r",
+									"console.log(\"Created user id is :\"+ userid)\r",
+									"pm.environment.set(\"user_ID\", userid)\r",
+									"\r",
+									"const email = response.email;\r",
+									"console.log(\"response email is :\" +email);\r",
+									"\r",
+									"const req = pm.request.body.raw;\r",
+									"const reqBody=JSON.parse(req);\r",
+									"const emailid = reqBody.email\r",
+									"const fname = reqBody.firstName\r",
+									"const lname = reqBody.lastName\r",
+									"console.log(\"firstName: \" + fname)\r",
+									"console.log(\"lastName :\" +lname)\r",
+									"\r",
+									"\r",
+									"console.log(\"request email is :\" +emailid)\r",
+									"\r",
+									"pm.test(\"Response has correct user details\", function () {\r",
+									"    pm.expect(response).to.have.property('_id');\r",
+									"    pm.expect(response.firstName.toLowerCase()).to.eql(fname.toLowerCase());\r",
+									"    pm.expect(response.lastName.toLowerCase()).to.eql(lname.toLowerCase());\r",
+									"    pm.expect(email).to.equal(emailid.toLowerCase()),\r",
+									"    pm.expect(response.phone).to.eql(reqBody.phone);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"birthdate\": \"1970-01-01\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"phone\": \"{{$randomPhoneNumber}}\",\r\n    \"street1\": \"1 Main St.\",\r\n    \"street2\": \"Apartment A\",\r\n    \"city\": \"Anytown\",\r\n    \"stateProvince\": \"DL\",\r\n    \"postalCode\": \"110008\",\r\n    \"country\": \"India\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/contacts",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2-Get User Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-Get contact list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-Update partial contact details",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Anna\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-Delete a contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6-Logout user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/users/logout",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ThinkingtesterAPI_DataDriven",
+			"item": [
+				{
+					"name": "1-Create a contact_DataDriven",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"const userid= response._id;\r",
+									"console.log(\"Created user id is :\"+ userid)\r",
+									"pm.environment.set(\"user_ID\", userid)\r",
+									"\r",
+									"const email = response.email;\r",
+									"console.log(\"response email is :\" +email);\r",
+									"\r",
+									"const req = pm.request.body.raw;\r",
+									"const reqBody=JSON.parse(req);\r",
+									"const emailid = reqBody.email\r",
+									"const fname = reqBody.firstName\r",
+									"const lname = reqBody.lastName\r",
+									"console.log(\"firstName: \" + fname)\r",
+									"console.log(\"lastName :\" +lname)\r",
+									"\r",
+									"console.log(\"request email is :\" +emailid)\r",
+									"\r",
+									"pm.test(\"Response has matching random email and phone\", function () {\r",
+									"    pm.expect(response).to.have.property('_id');\r",
+									"    pm.expect(email).to.equal(emailid.toLowerCase()),\r",
+									"    pm.expect(response.phone).to.eql(reqBody.phone);\r",
+									"\r",
+									"});\r",
+									"pm.test(\"Response has matching first and last name\", function () {\r",
+									"    pm.expect(response.firstName.toLowerCase()).to.eql(fname.toLowerCase());\r",
+									"    pm.expect(response.lastName.toLowerCase()).to.eql(lname.toLowerCase())\r",
+									"});\r",
+									"pm.test(\"Response has correct details fetched from data file\", function () {\r",
+									"    pm.expect(response.birthdate).to.eql(pm.iterationData.get(\"birthdate\"));\r",
+									"    pm.expect(response.street1).to.eql(pm.iterationData.get(\"street1\"));\r",
+									"    pm.expect(response.street2).to.eql(pm.iterationData.get(\"street2\"));\r",
+									"    pm.expect(response.city).to.eql(pm.iterationData.get(\"city\"));\r",
+									"    pm.expect(response.stateProvince).to.eql(pm.iterationData.get(\"stateProvince\"));    \r",
+									"    pm.expect(response.postalCode).to.eql(pm.iterationData.get(\"postalCode\"));\r",
+									"    pm.expect(response.country).to.eql(pm.iterationData.get(\"country\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"birthdate\": \"{{birthdate}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"phone\": \"{{$randomPhoneNumber}}\",\r\n    \"street1\": \"{{street1}}\",\r\n    \"street2\": \"{{street2}}\",\r\n    \"city\": \"{{city}}\",\r\n    \"stateProvince\": \"{{stateProvince}}\",\r\n    \"postalCode\": \"{{postalCode}}\",\r\n    \"country\": \"{{country}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/contacts",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2-Get User Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-Get contact list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-Update partial contact details",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Anna\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-Delete a contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/contacts/{{user_ID}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"contacts",
+								"{{user_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6-Logout user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{Token_ID}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/users/logout",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.sendRequest({\r",
+					"    url: pm.environment.get(\"baseurl\")+ '/users/login',\r",
+					"    method :'POST',\r",
+					"        header:{\r",
+					"        \"Content-Type\" : 'application/json'\r",
+					"    },\r",
+					"    body:{\r",
+					"        mode: \"raw\",\r",
+					"        raw: JSON.stringify({\r",
+					"            \"email\":    pm.environment.get(\"loginEmail\"),\r",
+					"             \"password\":pm.environment.get(\"loginPassword\")\r",
+					"         })\r",
+					"    }\r",
+					"},\r",
+					" function(error, response){//response -- JSON response\r",
+					"    if(error){\r",
+					"        console.log(error);\r",
+					"    }\r",
+					"    else{\r",
+					"        //JSON to JS Object: using parse\r",
+					"      const responseBody =  JSON.parse(response.text());//response to string/text\r",
+					"      const TID = responseBody.token;\r",
+					"      console.log(\"token id ==>\" + TID);\r",
+					"      pm.environment.set(\"Token_ID\", TID);\r",
+					"    }\r",
+					"})\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"if(pm.request.method =='GET'){\r",
+					"    pm.test(\"Status code can be 200 or 404\",function(){\r",
+					"        pm.expect(pm.response.code).to.be.oneOf([200,404])\r",
+					"});\r",
+					"}\r",
+					"if(pm.request.method == 'POST'){\r",
+					"   pm.test(\"Status code can be 200 or 201\",function() {\r",
+					"   pm.expect(pm.response.code).to.be.oneOf([200,201])\r",
+					"}); \r",
+					"}\r",
+					"if(pm.request.method == 'PUT'|| pm.request.method == 'PATCH'){\r",
+					"   pm.test(\"Status code is 200\",function() {\r",
+					"    pm.response.to.have.status(200);\r",
+					"}); \r",
+					"}\r",
+					"if(pm.request.method == 'DELETE'){\r",
+					"   pm.test(\"Status code is 200\",function() {\r",
+					"    pm.response.to.have.status(200);\r",
+					"}); \r",
+					"}\r",
+					"if(pm.info.requestName !== '3-Get contact list'){\r",
+					"\r",
+					"    pm.test(\"Response time is less than 5000ms\", function () {\r",
+					"        pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+					"    });\r",
+					"}"
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,45 @@
+Header Types for options
+
+Raw
+
+json - application/json
+xml   - application/xml
+JavaScript - application/javascript 
+text - text/plain
+Html - text/html	
+
+Formdata
+header type in formdata
+ ( can supply multiple text and multiple file)
+headertype = multipart/form-data
+
+
+x-www-form-urlencoded 
+( can supply multiple text but file upload is supported/not available)
+contenttype  -application/x-www-form-urlencoded
+
+Diff b/w formdata & urlencoded
+formdata - we can supply different variety of data like - .jpg, pdf, application/json, excel attachments etc
+urencoded - we can only supply multiple text data but not any kind of file attachment
+
+
+Binary
+only file can be uploaded. Only 1 file per request (limitation)
+file name is not sent to the server
+
+
+STATELESS /STATEFULL
+
+Stateless- REST API ( state means session. sessions are independent from each other). Server will not hold any kind of client information, like session id, cookie etc. In RestAPI, POST, GET etc calls are independent of each other . Client supply id with every request and hence it is slower than stateful
+Selenium 
+Script+ SID (chrome = new chromedriver) ----- Server
+Req2 get()+ sid ----- ser 
+
+Stateful- webscokets (playwrite), chat application. Server is maintaining the session id. Client do not supply ID with each request. It is faster . Maintenance is one of the biggest problem with stateful. Additional session storage is required. 
+
+Client (Req 1) --- Server (sessionID)
+Req 2 ----- Server(SID)
+
+
+
+
